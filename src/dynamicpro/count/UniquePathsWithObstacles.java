@@ -60,15 +60,67 @@ public class UniquePathsWithObstacles {
      *              f[i][j] = 0,            有障碍时（即：obstracleGrid[i][j]==1时）
      *                        f[0][j-1],    无障碍，且第一行（即i==0时）
      *                        f[i-1][0]     无障碍，且第一列（即j==0时）
-     *                        f[i-1][j] + f[i][j-1] 其他
+     *                        f[i-1][j] + f[i][j-1]
      *          step3, 初始条件
-     *              f[0][0] = obstracleGrid[0][0] == 1 ? 0 : 1
+     *              f[0][0] = obstracleGrid[0]
      *          step4, 计算顺序
      *              原则：后面的计算用到前面计算得到的值
      *              顺序：从上至下，从左至右
      * @author created by Meiyu Chen at 2021-6-2 13:58, v1.0
+     * @param obstacleGrid:int[][] obstacleGrid[i][j] = 1表示相应的位置有障碍，=0表示无障碍
+     * @return int 从左上角到右下角共有多少条路径
      */
     public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        // 1<=m,n<=100
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+
+        // 起始位置和结束位置是障碍物，到达不了结束位置
+        if (obstacleGrid[0][0] == 1 || obstacleGrid[m-1][n-1] == 1) {
+            return 0;
+        }
+
+        // f[i][j] : 到达位置（i,j）的路径数
+        int[][] f = new int[m][n];
+
+
+        for (int row = 0; row < m; row++) {
+            for (int col = 0; col < n; col++) {
+                if (obstacleGrid[row][col] == 1) {
+                    // 有障碍物，到不了该位置，到达该位置的路径总数为0
+                    f[row][col] = 0;
+                } else {
+                    if(row==0&&col==0){
+                        // 初始化
+                        f[0][0] = 1;
+                    } else {
+                        // 默认设为0，表示共0条路径可以到达（row,col）
+                        f[row][col] = 0;
+                        // 如果上面有格子，则加上上面格子路径数
+                        if (row > 1) {
+                            f[row][col] += f[row-1][col];
+                        }
+                        // 如果左边有格子，则加上左边格子路径数
+                        if (col>1) {
+                            f[row][col] += f[row][col-1];
+                        }
+                    }
+                    // 优化成上面的代码
+//                    else if (row == 0 && col>0) {
+//                        f[row][col] = f[row][col-1];
+//                    } else if(col == 0&&row>0){
+//                        f[row][col] = f[row-1][col];
+//                    }else{
+//                        f[row][col]=f[row][col-1] + f[row-1][col];
+//                    }
+                }
+
+            }
+
+        }
+        return f[m-1][n-1];
+    }
+    public int uniquePathsWithObstaclesV1(int[][] obstacleGrid) {
         // 1<=m,n<=100
         int m = obstacleGrid.length;
         int n = obstacleGrid[0].length;
