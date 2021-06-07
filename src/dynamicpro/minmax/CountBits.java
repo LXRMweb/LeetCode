@@ -36,9 +36,44 @@ public class CountBits {
         System.out.println(Arrays.toString(test.countBits(5)).replaceAll(" ","").equals("[0,1,1,2,1,2]"));
 //        System.out.println(Arrays.toString(test.countBits(5)));
 //        test.countBits(1000);
+        // 测试“>>”和“>>>”的区别
+//        testRightShift();
     }
 
+    /** Description: 测试“>>”和“>>>”的区别
+     * @author created by Meiyu Chen at 2021-6-7 9:39, v1.0
+     */
+    private static void testRightShift() {
+        for (int i = -10; i < 100; i++) {
+            System.out.println("i="+i+","+Integer.toBinaryString(i)+",>>1="+Integer.toBinaryString(i>>1)+",i>>>1="+Integer.toBinaryString(i>>>1));
+        }
+    }
+
+    /** Description: 动态规划算法
+     * step1，确定状态
+     *      f[i] 数字i的二进制形式数值中的1的个数
+     * step2，转移方程
+     *      f[i] = f[i>>1] + i%2
+     * step3, 初始值和边界值
+     *      f[0] = 0
+     * step4, 计算顺序
+     *      原则：后面计算过程使用前面已经计算出来的结果，降低时间复杂度
+     *      计算顺序：从小到大，这样算大数的1的位数的时候，就可以直接使用前面已经计算出的f[i>>1]
+     * @author created by Meiyu Chen at 2021-6-7 9:31, v1.0
+     */
     public int[] countBits(int n) {
+        int[] rst = new int[n+1];
+        for (int i = 0; i < n + 1; i++) {
+//            System.out.println("----------- n="+i);
+            rst[i] = rst[i>>1] + i%2;
+        }
+        return rst;
+    }
+
+    /** Description: 暴力算法，对0-n范围中的所有数字，分别使用Brian Kernighan 算法求解
+     * @author created by Meiyu Chen at 2021-6-7 9:30, v1.0
+     */
+    public int[] countBitsV3(int n) {
         int[] rst = new int[n+1];
         for (int i = 0; i < n + 1; i++) {
 //            System.out.println("----------- n="+i);
